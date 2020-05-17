@@ -5,7 +5,11 @@
 
 	<groupId>cn.allams</groupId>
 	<artifactId>hkjforum_cloud</artifactId>
+	<packaging>pom</packaging>
 	<version>0.0.1-SNAPSHOT</version>
+	<modules>
+		<module>service_ucenter</module>
+	</modules>
 	<name>hkjforum_cloud</name>
 	<description>Project for graduation project</description>
 
