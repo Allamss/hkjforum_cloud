@@ -15,17 +15,18 @@ import java.util.Date;
 public class MyMetaObjectHandler implements MetaObjectHandler {
 
     /**
-     * 添加时自动添加当前时间给gmt_create和gmt_modified
+     * 添加时自动赋值
      * @param metaObject metaObject
      */
     @Override
     public void insertFill(MetaObject metaObject) {
         this.setFieldValByName("gmtCreate", new Date(), metaObject);
         this.setFieldValByName("gmtModified", new Date(), metaObject);
+        this.setFieldValByName("is_deleted", 0, metaObject);
     }
 
     /**
-     * 更新时自动添加当前时间给gmt_modified
+     * 更新时自动自动赋值
      * @param metaObject metaObject
      */
     @Override
