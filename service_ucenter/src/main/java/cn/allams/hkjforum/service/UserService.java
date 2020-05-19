@@ -1,5 +1,7 @@
 package cn.allams.hkjforum.service;
 
+import cn.allams.hkjforum.entity.CommonResult;
+import cn.allams.hkjforum.entity.HkjforumException;
 import cn.allams.hkjforum.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +15,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface UserService extends IService<User> {
 
+    /**
+     * 用户登录
+     * @param user 用户信息
+     * @exception HkjforumException 自定义异常
+     * @return token
+     */
+    String login(User user) throws HkjforumException;
 }

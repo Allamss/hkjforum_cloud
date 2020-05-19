@@ -22,7 +22,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         this.setFieldValByName("gmtCreate", new Date(), metaObject);
         this.setFieldValByName("gmtModified", new Date(), metaObject);
-        this.setFieldValByName("is_deleted", 0, metaObject);
+        this.setFieldValByName("isDelete", 0, metaObject);
     }
 
     /**

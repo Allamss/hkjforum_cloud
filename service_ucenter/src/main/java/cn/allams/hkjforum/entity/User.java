@@ -1,9 +1,8 @@
 package cn.allams.hkjforum.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.util.Date;
-import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -29,7 +28,7 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "用户表id")
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.ID_WORKER)
     private Long id;
 
     @ApiModelProperty(value = "登陆用户名")
@@ -63,7 +62,9 @@ public class User implements Serializable {
     private Boolean isDisable;
 
     @ApiModelProperty(value = "是否被逻辑删除")
-    private Boolean isDelete;
+    @TableLogic
+    @TableField(fill = FieldFill.INSERT)
+    private Integer isDelete;
 
     @ApiModelProperty(value = "创建时间")
     private Date gmtCreate;

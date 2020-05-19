@@ -9,6 +9,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<modules>
 		<module>service_ucenter</module>
+		<module>common_api</module>
 	</modules>
 	<name>hkjforum_cloud</name>
 	<description>Project for graduation project</description>
@@ -83,11 +84,11 @@
 				<version>${junit.version}</version>
 			</dependency>
 			<!-- log4j -->
-			<dependency>
+			<!--<dependency>
 				<groupId>log4j</groupId>
 				<artifactId>log4j</artifactId>
 				<version>${log4j.version}</version>
-			</dependency>
+			</dependency>-->
 			<!--swagger-->
 			<dependency>
 				<groupId>io.springfox</groupId>
