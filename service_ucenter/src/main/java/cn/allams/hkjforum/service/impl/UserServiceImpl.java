@@ -28,9 +28,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String username = user.getUsername();
         String password = user.getPassword();
 
+        // TODO: 这一步也许应该交由校验器进行判断
         //用户名和密码非空判断
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
-            throw new HkjforumException(20001, "登陆失败");
+            throw new HkjforumException(20001, "用户名密码不能为空");
         }
 
         //判断用户名是否正确
@@ -58,5 +59,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
 
         return token;
+    }
+
+    @Override
+    public void register(User user) throws HkjforumException {
+        //获取登陆用户名和密码
+        String username = user.getUsername();
+        String password = user.getPassword();
+
+        // TODO: 这一步也许应该交由校验器进行判断
+        //用户名和密码非空判断
+        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
+            throw new HkjforumException(20001, "登陆失败");
+        }
+
+        //判断用户名是否已经存在
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", username);
+        /*Integer count = baseMapper.selectCount(queryWrapper);
+        if (count > 0) {
+            throw new HkjforumException(20001, "用户名已经存在");
+        }*/
+
+        //密码MD5加密保存
+        user.setPassword(MD5.encrypt(password));
+        baseMapper.insert(user);
     }
 }

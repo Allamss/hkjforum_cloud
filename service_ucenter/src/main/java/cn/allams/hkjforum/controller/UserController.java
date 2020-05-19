@@ -5,6 +5,7 @@ import cn.allams.hkjforum.entity.CommonResult;
 import cn.allams.hkjforum.entity.HkjforumException;
 import cn.allams.hkjforum.entity.User;
 import cn.allams.hkjforum.service.UserService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
  * @author Allams
  * @since 2020-05-17
  */
+@ApiOperation("用户模块控制器")
 @RestController
 @RequestMapping("/hkjforum/user")
 @CrossOrigin
@@ -25,9 +27,10 @@ public class UserController {
     UserService userService;
 
     /**
-     * 用户登录
+     * 用户名密码登录
+     *
      * @param user 登录用户表格
-     * @return token
+     * @return token JWT令牌
      */
     @PostMapping("login")
     public CommonResult login(@RequestBody User user) {
@@ -38,6 +41,16 @@ public class UserController {
             return CommonResult.error().message(e.getMessage());
         }
         return CommonResult.ok().data("token", token);
+    }
+
+    @PostMapping("register")
+    public CommonResult register(@RequestBody User user) {
+        try {
+            userService.register(user);
+        } catch (HkjforumException e) {
+            return CommonResult.error().message(e.getMessage());
+        }
+        return CommonResult.ok();
     }
 
 }
