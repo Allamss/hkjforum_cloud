@@ -1,19 +1,12 @@
-#服务端口
-server:
-  port: 8001
-
 spring:
-  #服务名
-  application:
-    name: service-ucenter
-  #返回json的全局时间格式
-  jackson:
-    time-zone: GMT+8
-    date-format: yyyy-MM-dd HH:mm:ss
-
+  #激活环境
+  profiles:
+    active: dev
 
 #mybatis日志
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  mapper-locations: classpath:com/allams/hkjforum/mapper/xml/*.xml
+  mapper-locations: classpath:cn/allams/hkjforum/mapper/xml/*.xml
+
+
