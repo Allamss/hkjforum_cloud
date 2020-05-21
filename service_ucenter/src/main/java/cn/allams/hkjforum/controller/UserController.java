@@ -5,10 +5,13 @@ import cn.allams.hkjforum.entity.CommonResult;
 import cn.allams.hkjforum.entity.HkjforumException;
 import cn.allams.hkjforum.entity.User;
 import cn.allams.hkjforum.service.UserService;
+import cn.allams.hkjforum.utils.JwtUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -26,6 +29,8 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    //TODO:图形验证码
 
     /**
      * 用户名密码登录
@@ -69,6 +74,16 @@ public class UserController {
 
 
         return null;
+    }
+
+    @ApiOperation("根据token获取用户信息")
+    @GetMapping("userInfo")
+    public CommonResult getUserInfo(HttpServletRequest request) {
+        //调用JWT工具类的方法。根据request对象获取头信息，返回用户id
+        String userId = JwtUtils.getMemberIdByJwtToken(request);
+        //查询数据库根据用户ID获取用户信息
+        User user = userService.getById(userId);
+        return CommonResult.ok().data("userInfo", user);
     }
 
 }
