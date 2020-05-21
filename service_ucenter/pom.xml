@@ -102,6 +102,19 @@
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity-engine-core</artifactId>
         </dependency>
+
+        <!--Alibaba开发者工具核心库-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>4.5.1</version>
+        </dependency>
+        <!--Alibaba SMS短信服务-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-sms</artifactId>
+            <version>3.0.0-rc1</version>
+        </dependency>
         <!--文件上传-->
 <!--        <dependency>
             <groupId>commons-fileupload</groupId>

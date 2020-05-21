@@ -79,10 +79,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         /*Integer count = baseMapper.selectCount(queryWrapper);
         if (count > 0) {
             throw new HkjforumException(20001, "用户名已经存在");
-        }*/
-
+        }
+*/
         //密码MD5加密保存
         user.setPassword(MD5.encrypt(password));
         baseMapper.insert(user);
+    }
+
+    @Override
+    public boolean existMobile(String mobile) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("mobile", mobile);
+        Integer count = baseMapper.selectCount(queryWrapper);
+        if (count > 0) {
+            return true;
+        }
+        //不存在
+        return false;
     }
 }

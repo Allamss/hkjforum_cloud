@@ -30,4 +30,12 @@ public interface UserService extends IService<User> {
      * @param user 注册信息
      */
     void register(User user) throws HkjforumException;
+
+    /**
+     * 检查是否存在该手机号
+     *
+     * @param mobile 手机号码
+     * @return 是否存在
+     */
+    boolean existMobile(String mobile);
 }
