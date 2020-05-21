@@ -76,11 +76,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //判断用户名是否已经存在
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", username);
-        /*Integer count = baseMapper.selectCount(queryWrapper);
+        Integer count = baseMapper.selectCount(queryWrapper);
         if (count > 0) {
             throw new HkjforumException(20001, "用户名已经存在");
         }
-*/
         //密码MD5加密保存
         user.setPassword(MD5.encrypt(password));
         baseMapper.insert(user);

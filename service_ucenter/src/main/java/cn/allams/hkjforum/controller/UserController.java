@@ -59,9 +59,14 @@ public class UserController {
     @ApiOperation("发送登陆短信")
     @PostMapping("/sms/send")
     public CommonResult mobileLogin(String mobile) {
-        if (userService.existMobile(mobile)) {
-            //TODO: continue
+        //未注册
+        if (!userService.existMobile(mobile)) {
+            return CommonResult.error().message("该手机未注册");
         }
+
+        //已经注册
+        //已经发过短信了
+
 
         return null;
     }
