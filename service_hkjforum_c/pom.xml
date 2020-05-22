@@ -44,10 +44,21 @@
         </dependency>
 
         <!--自定义通用包-->
-        <dependency>
+<!--        <dependency>
             <groupId>cn.allams</groupId>
             <artifactId>common_api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+        </dependency>-->
+
+        <!--swagger-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+        </dependency>
+        <!--swagger ui-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
         </dependency>
 
         <!--sleuth+zipkin-->

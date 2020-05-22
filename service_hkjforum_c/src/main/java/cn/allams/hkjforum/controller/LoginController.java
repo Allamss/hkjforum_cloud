@@ -1,7 +1,11 @@
 package cn.allams.hkjforum.controller;
 
+import cn.allams.hkjforum.entity.CommonResult;
+import cn.allams.hkjforum.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,4 +24,10 @@ public class LoginController {
 
     @Value("${service-url.service-ucenter}")
     private String serviceUrl;
+
+    @PostMapping("/login")
+    public CommonResult loginByUsername(@RequestBody User user) {
+        return restTemplate.postForObject(serviceUrl+"/hkjforum/user/login", user, CommonResult.class);
+    }
+
 }
