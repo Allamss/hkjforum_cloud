@@ -10,7 +10,8 @@
 	<modules>
 		<module>service_ucenter</module>
 		<module>common_api</module>
-	</modules>
+        <module>service_hkjforum_c</module>
+    </modules>
 	<name>hkjforum_cloud</name>
 	<description>Project for graduation project</description>
 
