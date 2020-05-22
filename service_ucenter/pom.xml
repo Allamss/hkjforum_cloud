@@ -122,6 +122,12 @@
             <version>1.3.3</version>
         </dependency>-->
 
+        <!--sleuth+zipkin-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-zipkin</artifactId>
+        </dependency>
+
         <!--commons-io-->
         <dependency>
             <groupId>commons-io</groupId>
