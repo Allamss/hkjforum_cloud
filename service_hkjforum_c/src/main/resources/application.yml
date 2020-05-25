@@ -6,4 +6,4 @@ spring:
 
 #消费者要访问的微服务名称,省的controller里定义
 service-url:
-  service-ucenter: service-ucenter
+  service-ucenter: http://service-ucenter

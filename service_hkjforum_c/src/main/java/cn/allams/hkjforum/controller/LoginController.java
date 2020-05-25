@@ -4,6 +4,7 @@ import cn.allams.hkjforum.entity.CommonResult;
 import cn.allams.hkjforum.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +29,11 @@ public class LoginController {
     @PostMapping("/login")
     public CommonResult loginByUsername(@RequestBody User user) {
         return restTemplate.postForObject(serviceUrl+"/hkjforum/user/login", user, CommonResult.class);
+    }
+
+    @GetMapping("/hello")
+    public String hello() {
+        return restTemplate.getForObject(serviceUrl+"/hkjforum/user/echo", String.class);
     }
 
 }

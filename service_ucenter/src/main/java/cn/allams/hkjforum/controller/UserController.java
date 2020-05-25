@@ -86,5 +86,11 @@ public class UserController {
         return CommonResult.ok().data("userInfo", user);
     }
 
+    @GetMapping("echo")
+    public String echo() {
+        return "hello";
+    }
+
+
 }
 
