@@ -3,6 +3,8 @@ package cn.allams.hkjforum.service;
 import cn.allams.hkjforum.entity.CommonResult;
 import cn.allams.hkjforum.entity.HkjforumException;
 import cn.allams.hkjforum.entity.User;
+import cn.allams.hkjforum.entity.vo.CheckBindSmsVO;
+import cn.allams.hkjforum.entity.vo.SendBindSmsVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -38,4 +40,18 @@ public interface UserService extends IService<User> {
      * @return 是否存在
      */
     boolean existMobile(String mobile);
+
+    /**
+     * 发送验证短信
+     *
+     * @param sendBindSmsVO 发短信对象
+     */
+    void sendBindSms(SendBindSmsVO sendBindSmsVO);
+
+    /**
+     * 校验短信验证码并绑定
+     *
+     * @param checkBindSmsVO 校验短信对象
+     */
+    boolean checkBindSms(CheckBindSmsVO checkBindSmsVO);
 }

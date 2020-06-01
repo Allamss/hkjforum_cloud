@@ -2,14 +2,30 @@ package cn.allams.hkjforum.service.impl;
 
 import cn.allams.hkjforum.entity.HkjforumException;
 import cn.allams.hkjforum.entity.User;
+import cn.allams.hkjforum.entity.vo.CheckBindSmsVO;
+import cn.allams.hkjforum.entity.vo.SendBindSmsVO;
 import cn.allams.hkjforum.mapper.UserMapper;
 import cn.allams.hkjforum.service.UserService;
 import cn.allams.hkjforum.utils.JwtUtils;
 import cn.allams.hkjforum.utils.MD5;
+import cn.allams.hkjforum.utils.RedisUtils;
+import cn.hutool.core.util.RandomUtil;
+import com.aliyuncs.CommonRequest;
+import com.aliyuncs.CommonResponse;
+import com.aliyuncs.DefaultAcsClient;
+import com.aliyuncs.IAcsClient;
+import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.exceptions.ServerException;
+import com.aliyuncs.http.MethodType;
+import com.aliyuncs.profile.DefaultProfile;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import javax.annotation.Resource;
 
 /**
  * <p>
@@ -21,6 +37,16 @@ import org.springframework.util.StringUtils;
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+
+    @Value("accessKeyId")
+    private String accessKeyId;
+
+    @Value("accessSecret")
+    private String accessSecret;
+
+    @Resource(name = "redisTemplate")
+    RedisTemplate redisTemplate;
+
 
     @Override
     public String login(User user) throws HkjforumException {
@@ -95,5 +121,67 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         //不存在
         return false;
+    }
+
+    @Override
+    public void sendBindSms(SendBindSmsVO sendBindSmsVO) {
+        RedisUtils redisUtils = new RedisUtils();
+        redisUtils.setRedisTemplate(redisTemplate);
+
+        //生成随机6位验证码
+        String code = String.valueOf(RandomUtil.randomInt(111111, 999999));
+
+        //放入Redis中并设置5分钟后过期
+        redisUtils.set("bind::" + sendBindSmsVO.getUserId(), code, 300);
+
+        sendSms(sendBindSmsVO.getMobile(), code);
+    }
+
+    @Override
+    public boolean checkBindSms(CheckBindSmsVO checkBindSmsVO) {
+        RedisUtils redisUtils = new RedisUtils();
+        redisUtils.setRedisTemplate(redisTemplate);
+
+        String code = (String)redisUtils.get("bind::" + checkBindSmsVO.getUserId());
+
+        //检验码不对
+        if (!code.equals(checkBindSmsVO.getCode())) {
+            return false;
+        }
+
+        User user = baseMapper.selectById(checkBindSmsVO.getUserId());
+        user.setMobile(checkBindSmsVO.getMobile());
+        baseMapper.updateById(user);
+        return true;
+    }
+
+    /**
+     * 发送sms短信
+     *
+     * @param mobile 手机号码
+     * @param code 验证码
+     */
+    void sendSms(String mobile, String code) {
+        DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId, accessSecret);
+        IAcsClient client = new DefaultAcsClient(profile);
+
+        CommonRequest request = new CommonRequest();
+        request.setSysMethod(MethodType.POST);
+        request.setSysDomain("dysmsapi.aliyuncs.com");
+        request.setSysVersion("2017-05-25");
+        request.setSysAction("SendSms");
+        request.putQueryParameter("RegionId", "cn-hangzhou");
+        request.putQueryParameter("PhoneNumbers", mobile);
+        request.putQueryParameter("SignName", "黑科技论坛");
+        request.putQueryParameter("TemplateCode", "SMS_190785959");
+        request.putQueryParameter("TemplateParam", "{\"code\":\""+ code + "\"}");
+        try {
+            CommonResponse response = client.getCommonResponse(request);
+            System.out.println(response.getData());
+        } catch (ServerException e) {
+            e.printStackTrace();
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
     }
 }

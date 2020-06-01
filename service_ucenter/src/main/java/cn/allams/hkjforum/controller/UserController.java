@@ -4,6 +4,8 @@ package cn.allams.hkjforum.controller;
 import cn.allams.hkjforum.entity.CommonResult;
 import cn.allams.hkjforum.entity.HkjforumException;
 import cn.allams.hkjforum.entity.User;
+import cn.allams.hkjforum.entity.vo.CheckBindSmsVO;
+import cn.allams.hkjforum.entity.vo.SendBindSmsVO;
 import cn.allams.hkjforum.service.UserService;
 import cn.allams.hkjforum.utils.JwtUtils;
 import io.swagger.annotations.Api;
@@ -86,9 +88,26 @@ public class UserController {
         return CommonResult.ok().data("userInfo", user);
     }
 
+    @ApiOperation("测试能否进行服务调用")
     @GetMapping("echo")
     public String echo() {
         return "hello";
+    }
+
+    @ApiOperation("发送用户绑定手机号码短信")
+    @PostMapping("bind/send")
+    public CommonResult sendBindSms(@RequestBody SendBindSmsVO sendBindSmsVO) {
+        userService.sendBindSms(sendBindSmsVO);
+        return CommonResult.ok();
+    }
+
+    @ApiOperation("用户绑定手机号码")
+    @PostMapping("bind/mobile")
+    public CommonResult bindMobile(CheckBindSmsVO checkBindSmsVO) {
+        if (userService.checkBindSms(checkBindSmsVO)) {
+            return CommonResult.ok().message("绑定手机号成功");
+        }
+        return CommonResult.error().message("验证码不正确");
     }
 
 
