@@ -38,10 +38,10 @@ import javax.annotation.Resource;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
-    @Value("accessKeyId")
+    @Value("${accessKeyId}")
     private String accessKeyId;
 
-    @Value("accessSecret")
+    @Value("${accessSecret}")
     private String accessSecret;
 
     @Resource(name = "redisTemplate")
