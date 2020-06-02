@@ -44,8 +44,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Value("${accessSecret}")
     private String accessSecret;
 
-    @Resource(name = "redisTemplate")
-    RedisTemplate redisTemplate;
+    @Resource(name = "redisUtils")
+    RedisUtils redisUtils;
 
 
     @Override
@@ -125,8 +125,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public void sendBindSms(SendBindSmsVO sendBindSmsVO) {
-        RedisUtils redisUtils = new RedisUtils();
-        redisUtils.setRedisTemplate(redisTemplate);
 
         //生成随机6位验证码
         String code = String.valueOf(RandomUtil.randomInt(111111, 999999));
@@ -139,15 +137,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public boolean checkBindSms(CheckBindSmsVO checkBindSmsVO) {
-        RedisUtils redisUtils = new RedisUtils();
-        redisUtils.setRedisTemplate(redisTemplate);
 
         String code = (String)redisUtils.get("bind::" + checkBindSmsVO.getUserId());
 
         //检验码不对
-        if (!code.equals(checkBindSmsVO.getCode())) {
+        if (code == null || !code.equals(checkBindSmsVO.getCode())) {
             return false;
         }
+
+        //正确就清除缓存并保存（暂不清除缓存，因为安全原因删除键命令禁止）
+        //redisUtils.del("bind::" + checkBindSmsVO.getUserId());
 
         User user = baseMapper.selectById(checkBindSmsVO.getUserId());
         user.setMobile(checkBindSmsVO.getMobile());

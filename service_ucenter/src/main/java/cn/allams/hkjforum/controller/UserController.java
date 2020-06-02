@@ -103,11 +103,11 @@ public class UserController {
 
     @ApiOperation("用户绑定手机号码")
     @PostMapping("bind/mobile")
-    public CommonResult bindMobile(CheckBindSmsVO checkBindSmsVO) {
+    public CommonResult bindMobile(@RequestBody CheckBindSmsVO checkBindSmsVO) {
         if (userService.checkBindSms(checkBindSmsVO)) {
             return CommonResult.ok().message("绑定手机号成功");
         }
-        return CommonResult.error().message("验证码不正确");
+        return CommonResult.error().message("验证码不正确或校验码已过期");
     }
 
 
