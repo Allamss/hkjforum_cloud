@@ -10,8 +10,10 @@ import cn.allams.hkjforum.service.UserService;
 import cn.allams.hkjforum.utils.JwtUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -108,6 +110,16 @@ public class UserController {
             return CommonResult.ok().message("绑定手机号成功");
         }
         return CommonResult.error().message("验证码不正确或校验码已过期");
+    }
+
+    @ApiOperation("用户上传头像")
+    @PostMapping("avatar/upload")
+    public CommonResult uploadAvatar(@RequestParam("file") MultipartFile file, @RequestParam Long userId) {
+        String uploadURL = userService.uploadAvatar(file, userId);
+        if (uploadURL == null) {
+            return CommonResult.error().message("上传头像失败");
+        }
+        return CommonResult.ok().message("头像上传成功").data("url", uploadURL);
     }
 
 

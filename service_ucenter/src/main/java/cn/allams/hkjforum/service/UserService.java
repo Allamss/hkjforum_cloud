@@ -1,11 +1,11 @@
 package cn.allams.hkjforum.service;
 
-import cn.allams.hkjforum.entity.CommonResult;
 import cn.allams.hkjforum.entity.HkjforumException;
 import cn.allams.hkjforum.entity.User;
 import cn.allams.hkjforum.entity.vo.CheckBindSmsVO;
 import cn.allams.hkjforum.entity.vo.SendBindSmsVO;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <p>
@@ -54,4 +54,13 @@ public interface UserService extends IService<User> {
      * @param checkBindSmsVO 校验短信对象
      */
     boolean checkBindSms(CheckBindSmsVO checkBindSmsVO);
+
+    /**
+     * 上传头像
+     *
+     * @param file 头像文件
+     * @param userId
+     * @return 头像在OSS位置
+     */
+    String uploadAvatar(MultipartFile file, Long userId);
 }

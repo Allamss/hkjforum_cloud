@@ -9,7 +9,11 @@ import cn.allams.hkjforum.service.UserService;
 import cn.allams.hkjforum.utils.JwtUtils;
 import cn.allams.hkjforum.utils.MD5;
 import cn.allams.hkjforum.utils.RedisUtils;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.RandomUtil;
+import com.aliyun.oss.OSS;
+import com.aliyun.oss.OSSClientBuilder;
 import com.aliyuncs.CommonRequest;
 import com.aliyuncs.CommonResponse;
 import com.aliyuncs.DefaultAcsClient;
@@ -20,12 +24,15 @@ import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * <p>
@@ -36,13 +43,32 @@ import javax.annotation.Resource;
  * @since 2020-05-17
  */
 @Service
+@Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
+    /**
+     * 阿里云accessKey
+     */
     @Value("${accessKeyId}")
     private String accessKeyId;
 
+    /**
+     * 阿里云accessSecret
+     */
     @Value("${accessSecret}")
     private String accessSecret;
+
+    /**
+     * 阿里云OSS地区endPoint
+     */
+    @Value("${endPoint}")
+    private String endPoint;
+
+    /**
+     * 阿里云OSS bucket名
+     */
+    @Value("${bucketName}")
+    private String bucketName;
 
     @Resource(name = "redisUtils")
     RedisUtils redisUtils;
@@ -152,6 +178,42 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setMobile(checkBindSmsVO.getMobile());
         baseMapper.updateById(user);
         return true;
+    }
+
+    @Override
+    public String uploadAvatar(MultipartFile file, Long userId) {
+        String uploadUrl = null;
+        try {
+            //获取上传文件流
+            InputStream inputStream = file.getInputStream();
+
+            //构建日期路径
+            String filePath = "avatar/" + new DateTime().toString("yyyy/MM/dd");
+
+            //文件名：UUID.扩展名
+            String original = file.getOriginalFilename();
+            String fileName = UUID.randomUUID().toString();
+            String fileType = original.substring(original.lastIndexOf("."));
+            String newName = fileName + fileType;
+            String fileUrl = filePath + "/" + newName;
+
+            //文件上传至阿里云OSS
+            OSS ossClient = new OSSClientBuilder().build(endPoint, accessKeyId, accessSecret);
+            ossClient.putObject(bucketName, fileUrl, inputStream);
+            ossClient.shutdown();
+
+            //获取url地址
+            uploadUrl = "http://" + bucketName + "." + endPoint + "/" + fileUrl;
+
+            //保存头像路径到数据库
+            User user = baseMapper.selectById(userId);
+            user.setAvatar(uploadUrl);
+            baseMapper.updateById(user);
+       } catch (IOException e) {
+            log.error("上传头像IO异常");
+            return null;
+        }
+        return uploadUrl;
     }
 
     /**
