@@ -36,4 +36,9 @@ public class LoginController {
         return restTemplate.getForObject(serviceUrl+"/hkjforum/user/echo", String.class);
     }
 
+    @PostMapping("/register")
+    public CommonResult register(@RequestBody User user) {
+        return restTemplate.postForObject(serviceUrl+"/hkjforum/user/register", user, CommonResult.class);
+    }
+
 }
