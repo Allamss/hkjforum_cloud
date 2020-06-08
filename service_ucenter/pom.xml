@@ -139,6 +139,17 @@
             <version>2.6</version>
         </dependency>
 
+        <!--SpringCloudAlibaba sentinel-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+        </dependency>
+        <!--sentinel配合nacos做持久化用到-->
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-datasource-nacos</artifactId>
+        </dependency>
+
         <!--httpclient-->
 <!--        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
