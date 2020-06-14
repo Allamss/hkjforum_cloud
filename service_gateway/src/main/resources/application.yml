@@ -1,0 +1,22 @@
+server:
+  port: 8500
+
+spring:
+  application:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: SERVICE-POST
+          uri: lb://SERVICE-POST
+          predicates:
+            - Path=/*/post/** # 路径匹配
+        - id: SERVICE-UCENTER
+          uri: lb://SERVICE-UCENTER
+          predicates:
+            - Path=/*/user/** # 路径匹配
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
