@@ -14,6 +14,7 @@
         <module>service_post</module>
         <module>canal-client</module>
         <module>service_gateway</module>
+        <module>spring_security</module>
     </modules>
 	<name>hkjforum_cloud</name>
 	<description>Project for graduation project</description>
